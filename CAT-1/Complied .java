@@ -1,4 +1,4 @@
-Loop Detection or Detect Cycle in SLL.java
+// 1  Loop Detection or Detect Cycle in SLL.java
 import java.util.*;
 class Node{
     int num;
@@ -71,7 +71,7 @@ public class Main
 	}
 }
 
-// Sort the bitonic doubly linked list
+// 2 Sort the bitonic doubly linked list
 import java.util.*;
 
 public class Main
