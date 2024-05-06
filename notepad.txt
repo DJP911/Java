@@ -1,0 +1,2253 @@
+// 1  Loop Detection or Detect Cycle in SLL.java
+import java.util.*;
+class Node{
+    int num;
+    Node next;
+    Node(int val){
+        num=val;
+        next=null;
+    }
+}
+public class Main
+{
+    static Node insertNode(Node head,int val){
+        Node newNode = new Node(val);
+        if(head == null){
+            head = newNode;
+            return head;
+        }
+        
+        Node temp = head;
+        while(temp.next != null) temp=temp.next;
+        
+        temp.next=newNode;
+        return head;   
+    }
+    static void display(Node head){
+        Node temp = head;
+        while(temp.next != null){
+            System.out.print(temp.num+"->");
+            temp=temp.next;
+        }
+        System.out.println(temp.num+"->"+"NULL");
+    }
+    static void createCycle(Node head,int a,int b){
+        int cnta = 0;
+        int cntb = 0;
+        Node p1 = head;
+        Node p2 = head;
+        while(cnta != a || cntb != b){
+            if(cnta != a) p1 = p1.next;++cnta;
+            if(cntb != b) p2 = p2.next;++cntb;
+        }
+        if(p2 != null) p2.next = p1;
+    }
+    static boolean cycleDetect(Node head){
+        if(head == null) return false;
+        Node fast = head;
+        Node slow = head;
+        
+        while(fast.next != null && fast.next.next != null){
+            fast=fast.next.next;
+            slow=slow.next;
+            if(fast==slow) return true;
+        }
+        return false;
+    }
+	public static void main(String[] args) {
+	    Scanner sc = new Scanner(System.in);
+	    int n = sc.nextInt();
+	    Node head = null;
+	    for(int i=0;i<n;i++){
+	        int m = sc.nextInt();
+	        head = insertNode(head,m);
+	    }
+	    display(head);
+	    int a = sc.nextInt();
+	    createCycle(head,1,a); // creating cycle in the list
+	    if(cycleDetect(head)==true) System.out.println("Cycle Detected");
+	    else System.out.println("Cycle not Detected");
+	    
+	}
+}
+
+// 2 Sort the bitonic doubly linked list
+import java.util.*;
+
+public class Main
+{
+    static class Node{
+        int data;
+        Node next;
+        Node prev;
+    };
+    static Node sort(Node head){
+        if(head == null || head.next == null) return head;
+        
+        Node front = head;
+        Node last = head;
+        Node res = new Node();
+        Node resend = res;
+        Node next ;
+        while(last.next != null){
+            last = last.next;
+        }
+        while(front != last){
+            if(last.data <= front.data){
+                resend.next=last;
+                next = last.prev;
+                last.prev.next= null;
+                last.prev= resend;
+                last= next;
+                resend= resend.next;
+            }
+            else{
+                resend.next= front;
+                next= front.next;
+                front.next=null;
+                front.prev=resend;
+                front = next;
+                resend= resend.next;
+            }
+        }
+        resend.next = front;
+        front.prev= resend;
+        return res.next;
+    }
+    static Node push(Node head_ref,int new_data){
+        Node new_node = new Node();
+        new_node.data=new_data;
+        new_node.prev=null;
+        new_node.next=head_ref;
+        if(head_ref != null) head_ref.prev= new_node;
+        head_ref = new_node;
+        return head_ref;
+    }
+    static void printList(Node head){
+        if(head == null) System.out.print("Doubly Linked List is Empty");
+        while(head != null) {
+            System.out.print(head.data + " ");
+            head = head.next;
+        }
+    }
+	public static void main(String[] args) {
+	    Scanner sc = new Scanner(System.in);
+	    int n = sc.nextInt();
+	    Node head = null;
+	    for(int i=0;i<n;i++){
+	        int m = sc.nextInt();
+	        head = push(head,m);
+	    }
+	    head = sort(head);
+	    System.out.println("After Sorting");
+	    printList(head);
+	}
+}
+
+// 3 . Segregate even and odd nodes in a Linked List
+import java.util.*;
+
+class Main {
+    Node head;
+
+    class Node {
+        int data;
+        Node next;
+
+        Node(int d) {
+            data = d;
+            next = null;
+        }
+    }
+
+    void segregateEvenOdd() {
+        Node evenStart = null;
+        Node evenEnd = null;
+        Node oddStart = null;
+        Node oddEnd = null;
+        Node currentNode = head;
+
+        while (currentNode != null) {
+            int element = currentNode.data;
+            if (element % 2 == 0) {
+                if (evenStart == null) {
+                    evenStart = currentNode;
+                    evenEnd = evenStart;
+                } else {
+                    evenEnd.next = currentNode;
+                    evenEnd = evenEnd.next;
+                }
+            } else {
+                if (oddStart == null) {
+                    oddStart = currentNode;
+                    oddEnd = oddStart;
+                } else {
+                    oddEnd.next = currentNode;
+                    oddEnd = oddEnd.next;
+                }
+            }
+            currentNode = currentNode.next;
+        }
+        if (oddStart == null || evenStart == null) {
+            return;
+        }
+        evenEnd.next = oddStart;
+        oddEnd.next = null;
+        head = evenStart;
+    }
+
+    void push(int new_data) {
+        Node new_node = new Node(new_data);
+        new_node.next = head;
+        head = new_node;
+    }
+
+    void printList() {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String args[]) {
+        Main main = new Main();
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        for (int i = 0; i < n; i++) {
+            int m = sc.nextInt();
+            main.push(m);
+        }
+        main.segregateEvenOdd();
+        main.printList();
+    }
+}
+// 4. Merge Sort in Doubly Linked List
+import java.util.Scanner;
+
+class Node {
+    int data;
+    Node next, prev;
+
+    Node(int val) {
+        data = val;
+        next = null;
+        prev = null;
+    }
+}
+
+class Solution {
+    public Node split(Node head) {
+        Node fast = head, slow = head;
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        Node temp = slow.next;
+        slow.next = null;
+        return temp;
+    }
+
+    public Node mergeSort(Node node) {
+        if (node == null || node.next == null)
+            return node;
+        Node second = split(node);
+        node = mergeSort(node);
+        second = mergeSort(second);
+        return merge(node, second);
+    }
+
+    public Node merge(Node first, Node second) {
+        if (first == null)
+            return second;
+        if (second == null)
+            return first;
+        if (first.data < second.data) {
+            first.next = merge(first.next, second);
+            first.next.prev = first;
+            first.prev = null;
+            return first;
+        } else {
+            second.next = merge(first, second.next);
+            second.next.prev = second;
+            second.prev = null;
+            return second;
+        }
+    }
+}
+
+public class Main {
+    public static void printList_left_right(Node head) {
+        while (head != null) {
+            System.out.print(head.data + " ");
+            head = head.next;
+        }
+        System.out.println();
+    }
+
+    public static void printList_right_left(Node head) {
+        Node tail = head;
+        while (tail.next != null)
+            tail = tail.next;
+        while (tail != null) {
+            System.out.print(tail.data + " ");
+            tail = tail.prev;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int val = sc.nextInt();
+        Node head = new Node(val);
+        for (int i = 0; i < n; i++) {
+            val = sc.nextInt();
+            Node nd = new Node(val);
+            nd.next = head;
+            head = nd;
+        }
+        Solution g = new Solution();
+        Node res = g.mergeSort(head);
+        printList_left_right(res);
+        printList_right_left(res);
+    }
+}
+// 5 . Minimum Stack
+import java.util.*;
+
+class Mystack {
+    Stack<Integer> s;
+    Stack<Integer> a;
+
+    Mystack() {
+        s = new Stack<Integer>();
+        a = new Stack<Integer>();
+    }
+
+    void getMin() {
+        if (a.isEmpty())
+            System.out.println("Stack is Empty");
+        else
+            System.out.println("Minimum element : " + a.peek());
+    }
+
+    void peek() {
+        if (s.isEmpty()) {
+            System.out.println("Stack is Empty");
+            return;
+        }
+
+        Integer t = s.peek();
+        System.out.print("Top most element: " + t);
+    }
+
+    void pop() {
+        int t = s.pop();
+        if (s.isEmpty()) {
+            System.out.println("Stack is Empty");
+            return;
+        } else
+            System.out.println("Removed element : " + t);
+        if (t == a.peek())
+            a.pop();
+    }
+
+    void push(int x) {
+        if (s.isEmpty()) {
+            s.push(x);
+            a.push(x);
+            System.out.println(" Number Inserted: " + x);
+            return;
+        } else {
+            s.push(x);
+            System.out.println(" Number Inserted: " + x);
+        }
+        if (x <= a.peek())
+            a.push(x);
+    }
+}
+
+public class Main {
+    public static void main(String args[]) {
+        Mystack s = new Mystack();
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        for (int i = 0; i < n; i++) {
+            int m = sc.nextInt();
+            s.push(m);
+        }
+        s.getMin();
+        s.pop();
+        s.getMin();
+        s.pop();
+        s.peek();
+    }
+}
+// 6. Celebrity Problem
+import java.util.*;
+
+public class Main {
+    public static int celebritySolution(int[][] mat) {
+        Stack<Integer> stk = new Stack<>();
+        for (int i = 0; i < mat.length; i++) {
+            stk.push(i);
+        }
+        while (stk.size() > 1) {
+            int col = stk.pop();
+            int row = stk.pop();
+            if (mat[row][col] == 1) {
+                stk.push(col);
+            } else {
+                stk.push(row);
+            }
+        }
+        int x = stk.pop();
+        for (int j = 0; j < mat.length; j++) {
+            if (j == x) continue;
+            if (mat[x][j] == 1) {
+                return -1;
+            }
+        }
+        for (int i = 0; i < mat.length; i++) {
+            if (i == x) continue;
+            if (mat[i][x] == 0) {
+                return -1;
+            }
+        }
+        return x;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[][] matrix = new int[n][n];
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                matrix[i][j] = sc.nextInt();
+        int res = celebritySolution(matrix);
+        if (res == -1)
+            System.out.println("There is no celebrity in the party");
+        else
+            System.out.println(res + " is the celebrity in the party");
+    }
+}
+// 7. Iterative Tower of Hanoi
+// Java recursive program to solve tower of hanoi puzzle
+
+class GFG
+{
+	// Java recursive function to solve tower of hanoi puzzle
+	static void towerOfHanoi(int n, char from_rod, char to_rod, char aux_rod)
+	{
+		if (n == 1)
+		{
+			System.out.println("Move disk 1 from rod " + from_rod + " to rod " + to_rod);
+			return;
+		}
+		towerOfHanoi(n-1, from_rod, aux_rod, to_rod);
+		System.out.println("Move disk " + n + " from rod " + from_rod + " to rod " + to_rod);
+		towerOfHanoi(n-1, aux_rod, to_rod, from_rod);
+	}
+	
+	// Driver method
+	public static void main(String args[])
+	{
+		int n = 4; // Number of disks
+		towerOfHanoi(n, \'A\', \'C\', \'B\'); // A, B and C are names of rods
+	}
+}
+
+
+
+import java.util.*;
+
+class Main {
+    class Stack {
+        int capacity;
+        int top;
+        int array[];
+
+    }
+
+    Stack createStack(int capacity) {
+        Stack stack = new Stack();
+        stack.capacity = capacity;
+        stack.top = -1;
+        stack.array = new int[capacity];
+        return stack;
+    }
+
+    static boolean isFull(Stack stack) {
+        return (stack.top == stack.capacity - 1);
+    }
+
+    static boolean isEmpty(Stack stack) {
+        return (stack.top == -1);
+    }
+
+    static void push(Stack stack, int item) {
+        if (isFull(stack))
+            return;
+        stack.top++;
+        stack.array[stack.top] = item;
+    }
+
+    static int pop(Stack stack) {
+        if (isEmpty(stack))
+            return Integer.MIN_VALUE;
+        return stack.array[stack.top--];
+    }
+
+    static void move_disc(Stack source, Stack destination, char s, char d) {
+        int p1 = pop(source);
+        int p2 = pop(destination);
+        if (p1 == Integer.MIN_VALUE) {
+            push(source, p2);
+            System.out.println("Move the disk " + p2 + " from " + d + " to " + s);
+        } else if (p2 == Integer.MIN_VALUE) {
+            push(destination, p1);
+            System.out.println("Move the disk " + p1 + " from " + s + " to " + d);
+        } else if (p1 > p2) {
+            push(source, p1);
+            push(source, p2);
+            System.out.println("Move the disk " + p2 + " from " + d + " to " + s);
+        } else {
+            push(destination, p2);
+            push(destination, p1);
+            System.out.println("Move the disk " + p1 + " from " + s + " to " + d);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner us = new Scanner(System.in);
+        int num_of_disks = us.nextInt();
+        Main ob = new Main();
+        Stack source, destination, auxillary;
+
+        source = ob.createStack(num_of_disks);
+        destination = ob.createStack(num_of_disks);
+        auxillary = ob.createStack(num_of_disks);
+        int total_num_of_moves;
+        char s = 'S', d = 'D', a = 'A';
+        if (num_of_disks % 2 == 0) {
+            char temp = d;
+            d = a;
+            a = temp;
+        }
+        total_num_of_moves = (int) (Math.pow(2, num_of_disks) - 1);
+        for (int i = num_of_disks; i >= 1; i--)
+            ob.push(source, i);
+        for (int i = 1; i <= total_num_of_moves; i++) {
+            if (i % 3 == 1)
+                ob.move_disc(source, destination, s, d);
+            else if (i % 3 == 2)
+                ob.move_disc(source, auxillary, s, a);
+            else if (i % 3 == 0)
+                ob.move_disc(auxillary, destination, a, d);
+        }
+    }
+}
+// 8. STOCK SPAN
+import java.util.*;
+
+public class Main {
+    static void calculate(int arr[], int n, int S[]) {
+        Stack<Integer> st = new Stack<>();
+        st.push(0);
+        S[0] = 1;
+        for (int i = 1; i < n; i++) {
+            while (!st.isEmpty() && arr[st.peek()] <= arr[i])
+                st.pop();
+            S[i] = (st.isEmpty()) ? (i + 1) : (i - st.peek());
+            st.push(i);
+        }
+    }
+
+    static void printArray(int arr[]) {
+        System.out.print(Arrays.toString(arr));
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int arr[] = new int[n];
+        for (int i = 0; i < n; i++)
+            arr[i] = sc.nextInt();
+        int S[] = new int[n];
+        calculate(arr, n, S);
+        printArray(S);
+    }
+}
+// 9. Priority Queue using DLL
+import java.util.*;
+
+class Main {
+    static class Node {
+        int data;
+        int priority;
+        Node next, prev;
+
+        public Node(int data, int priority) {
+            this.data = data;
+            this.priority = priority;
+        }
+    }
+
+    private static Node head = null;
+
+    private static void push(int data, int priority) {
+        if (head == null) {
+            Node newNode = new Node(data, priority);
+            head = newNode;
+            return;
+        }
+        Node node = new Node(data, priority);
+        Node temp = head, parent = null;
+        while (temp != null && temp.priority >= priority) {
+            parent = temp;
+            temp = temp.next;
+        }
+        if (parent == null) {
+            node.next = head;
+            head.prev = node;
+            head = node;
+        } else if (temp == null) {
+            parent.next = node;
+            node.prev = parent;
+        } else {
+            parent.next = node;
+            node.prev = parent;
+            node.next = temp;
+            temp.prev = node;
+        }
+    }
+
+    private static int peek() {
+        if (head != null) {
+            return head.data;
+        }
+        return -1;
+    }
+
+    private static int pop() {
+        if (head != null) {
+            int curr = head.data;
+            head = head.next;
+            if (head != null)
+                head.prev = null;
+            return curr;
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        for (int i = 0; i < n; i++) {
+            int data = sc.nextInt();
+            int pri = sc.nextInt();
+            push(data, pri);
+        }
+        System.out.println(peek());
+        System.out.println(pop());
+        System.out.println(pop());
+        System.out.println(peek());
+    }
+}
+// 10. Sort without extra space
+import java.util.*;
+
+class Main {
+    public static int minIndex(Queue<Integer> list, int sortIndex) {
+        int min_index = -1;
+        int min_value = Integer.MAX_VALUE;
+        int s = list.size();
+        for (int i = 0; i < s; i++) {
+            int current = list.peek();
+            list.poll();
+            if (current <= min_value && i <= sortIndex) {
+                min_index = i;
+                min_value = current;
+            }
+            list.add(current);
+        }
+        return min_index;
+    }
+
+    public static void insertMinToRear(Queue<Integer> list, int min_index) {
+        int min_value = 0;
+        int s = list.size();
+        for (int i = 0; i < s; i++) {
+            int current = list.peek();
+            list.poll();
+            if (i != min_index)
+                list.add(current);
+            else
+                min_value = current;
+        }
+        list.add(min_value);
+    }
+
+    public static void sortQueue(Queue<Integer> list) {
+        for (int i = 1; i <= list.size(); i++) {
+            int min_index = minIndex(list, list.size() - i);
+            insertMinToRear(list, min_index);
+        }
+    }
+
+    public static void main(String[] args) {
+        Queue<Integer> list = new LinkedList<Integer>();
+        list.add(6);
+        list.add(11);
+        list.add(15);
+        list.add(4);
+        sortQueue(list);
+        while (list.isEmpty() == false) {
+            System.out.print(list.peek() + " ");
+            list.poll();
+        }
+    }
+}
+// 11  Maximum Sliding Window
+import java.util.*;
+
+public class Main {
+    public static int[] maxSliding(int[] in, int w) {
+        int[] max_left = new int[in.length];
+        int[] max_right = new int[in.length];
+        max_left[0] = in[0];
+        max_right[in.length - 1] = in[in.length - 1];
+        for (int i = 1; i < in.length; i++) {
+            max_left[i] = (i % w == 0) ? in[i] : Math.max(max_left[i - 1], in[i]);
+            final int j = in.length - i - 1;
+            max_right[j] = (j % w == 0) ? in[j] : Math.max(max_right[j + 1], in[j]);
+        }
+        final int[] sliding_max = new int[in.length - w + 1];
+        for (int i = 0, j = 0; i + w <= in.length; i++) {
+            sliding_max[j++] = Math.max(max_right[i], max_left[i + w - 1]);
+        }
+        return sliding_max;
+    }
+
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int k = sc.nextInt();
+        int a[] = new int[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = sc.nextInt();
+        }
+        int ans[] = maxSliding(a, k);
+        for (int i = 0; i < ans.length; i++)
+            System.out.print(ans[i] + " ");
+    }
+}
+
+// 12  Stack Permutation
+import java.util.*;
+
+class Main {
+    static Boolean check(int ip[], int op[], int n) {
+        Stack<Integer> s = new Stack<Integer>();
+        int j = 0;
+        for (int i = 0; i < n; i++) {
+            s.push(ip[i]);
+            while (!s.isEmpty() && s.peek() == op[j]) {
+                s.pop();
+                j++;
+            }
+        }
+        if (s.isEmpty())
+            return true;
+        return false;
+    }
+
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int input[] = new int[n];
+        int output[] = new int[n];
+        for (int i = 0; i < n; i++)
+            input[i] = sc.nextInt();
+        for (int i = 0; i < n; i++)
+            output[i] = sc.nextInt();
+        if (check(input, output, n))
+            System.out.println("Yes");
+        else
+            System.out.println("Not Possible");
+    }
+}
+
+
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+1. Recover BST 
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+import java.util.*;
+class TreeNode {
+  int val;
+  TreeNode left;
+  TreeNode right;
+  TreeNode() {}
+  TreeNode(int val) {
+    this.val = val;
+  }
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
+}
+class Solution {
+   void recoverTree(TreeNode root) {
+    Stack < TreeNode > stack = new Stack < > ();
+    TreeNode current = root;
+    TreeNode lastProcessed = null;
+    TreeNode[] swapped = new TreeNode[2];
+    while (!stack.isEmpty() || current != null) {
+      while (current != null) {
+        stack.push(current);
+        current = current.left;
+      }
+      current = stack.pop();
+      if (lastProcessed != null && lastProcessed.val > current.val) {
+        if (swapped[0] == null) {
+          swapped[0] = lastProcessed;
+          swapped[1] = current;
+        } else {
+          swapped[1] = current;
+          break;
+        }
+      }
+      lastProcessed = current;
+      current = current.right;
+    }
+    int temp = swapped[0].val;
+    swapped[0].val = swapped[1].val;
+    swapped[1].val = temp;
+  }
+  public static void printInorder(TreeNode node) {
+    if (node == null)
+      return;
+    printInorder(node.left);
+    System.out.print(" " + node.val);
+    printInorder(node.right);
+  }
+}
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter values for nodes in level order where 'null' represents missing nodes:");
+        String input = scanner.nextLine();
+        String[] values = input.split("\\s+");
+        TreeNode root = buildTree(values);
+        scanner.close();
+        Solution solution = new Solution();
+        solution.recoverTree(root);
+        System.out.println("Recovered tree:");
+        solution.printInorder(root);
+    }
+    private static TreeNode buildTree(String[] values) {
+        if (values[0].equals("null")) return null;
+        Queue<TreeNode> queue = new LinkedList<>();
+        TreeNode root = new TreeNode(Integer.parseInt(values[0]));
+        queue.add(root);
+        int i = 1;
+        while (!queue.isEmpty() && i < values.length) {
+            TreeNode current = queue.poll();
+            if (!values[i].equals("null")) {
+                current.left = new TreeNode(Integer.parseInt(values[i]));
+                queue.add(current.left);
+            }
+            i++;
+            if (i < values.length && !values[i].equals("null")) {
+                current.right = new TreeNode(Integer.parseInt(values[i]));
+                queue.add(current.right);
+            }
+            i++;
+        }
+        return root;
+    }
+}
+
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+2. Views of tree
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import java.util.*;
+import java.util.Map.Entry;
+
+class Node {
+    int data, hd;
+    Node left, right;
+
+    public Node(int data) {
+        this.data = data;
+        left = right = null;
+        this.hd = Integer.MAX_VALUE;
+    }
+}
+
+class Main {
+    static Node root;
+    private List<Integer> path1 = new ArrayList<>();
+    private List<Integer> path2 = new ArrayList<>();
+
+    static Node build(String s[]) {
+        if (s.length == 0)
+            return null;
+        Queue<Node> q = new LinkedList<>();
+        Node root = new Node(Integer.parseInt(s[0]));
+        q.add(root);
+        int i = 1;
+        while (!q.isEmpty() && i < s.length) {
+            Node curr = q.poll();
+            if (!s[i].equals("null")) {
+                curr.left = new Node(Integer.parseInt(s[i]));
+                q.add(curr.left);
+            }
+            i++;
+            if (i < s.length && !s[i].equals("null")) {
+                curr.right = new Node(Integer.parseInt(s[i]));
+                q.add(curr.right);
+            }
+            i++;
+        }
+        return root;
+    }
+
+    // Right View
+    void rightview(Node root) {
+        if (root == null)
+            return;
+        Queue<Node> q = new LinkedList<>();
+        q.add(root);
+        while (!q.isEmpty()) {
+            int n = q.size();
+            for (int i = 0; i < n; i++) {
+                Node curr = q.peek();
+                q.remove();
+                if (i == n - 1) {
+                    System.out.print(curr.data + " ");
+                }
+                if (curr.left != null)
+                    q.add(curr.left);
+                if (curr.right != null)
+                    q.add(curr.right);
+            }
+        }
+    }
+
+    // Left View
+    void leftview(Node root) {
+        if (root == null)
+            return;
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            int n = queue.size();
+            for (int i = 1; i <= n; i++) {
+                Node temp = queue.poll();
+                if (i == 1)
+                    System.out.print(temp.data + " ");
+                if (temp.left != null)
+                    queue.add(temp.left);
+                if (temp.right != null)
+                    queue.add(temp.right);
+            }
+        }
+    }
+
+    // Top View
+    static class QueueObj {
+        Node node;
+        int hd;
+
+        QueueObj(Node node, int hd) {
+            this.node = node;
+            this.hd = hd;
+        }
+    }
+
+    static void topview(Node root) {
+        if (root == null)
+            return;
+        Queue<QueueObj> q = new LinkedList<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        int min = 0;
+        int max = 0;
+        q.add(new QueueObj(root, 0));
+        while (!q.isEmpty()) {
+            QueueObj curr = q.poll();
+            if (!map.containsKey(curr.hd))
+                map.put(curr.hd, curr.node.data);
+
+            if (curr.node.left != null) {
+                min = Math.min(min, curr.hd - 1);
+                q.add(new QueueObj(curr.node.left, curr.hd - 1));
+            }
+            if (curr.node.right != null) {
+                max = Math.max(max, curr.hd + 1);
+                q.add(new QueueObj(curr.node.right, curr.hd + 1));
+            }
+        }
+        for (; min <= max; min++)
+            System.out.print(map.get(min) + " ");
+    }
+
+    // Bottom View
+    static void bottomview(Node root) {
+        if (root == null)
+            return;
+        int hd = 0;
+        Map<Integer, Integer> map = new TreeMap<>();
+        Queue<Node> queue = new LinkedList<Node>();
+        root.hd = hd;
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            Node temp = queue.remove();
+            hd = temp.hd;
+            map.put(hd, temp.data);
+            if (temp.left != null) {
+                temp.left.hd = hd - 1;
+                queue.add(temp.left);
+            }
+            if (temp.right != null) {
+                temp.right.hd = hd + 1;
+                queue.add(temp.right);
+            }
+        }
+        for (Integer value : map.values()) {
+            System.out.print(value + " ");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int i;
+        Main ob = new Main();
+        String s[] = sc.nextLine().split(" ");
+        root = build(s);
+        ob.rightview(root);
+        System.out.println();
+        ob.leftview(root);
+        System.out.println();
+        ob.topview(root);
+        System.out.println();
+        ob.bottomview(root);
+    }
+}
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// 3. vertical order traversal
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import java.util.*;
+import java.util.Map.Entry;
+
+class Node {
+    int data;
+    Node left, right;
+
+    public Node(int data) {
+        this.data = data;
+        left = right = null;
+    }
+}
+
+public class Main {
+    static Node root;
+    private List<Integer> path1 = new ArrayList<>();
+    private List<Integer> path2 = new ArrayList<>();
+
+    static Node build(String s[]) {
+        if (s[0].equals("null") || s.length == 0)
+            return null;
+        Node root = new Node(Integer.parseInt(s[0]));
+        Queue<Node> q = new LinkedList<Node>();
+        q.add(root);
+        int i = 1;
+        while (!q.isEmpty() && i < s.length) {
+            Node curr = q.poll();
+            String cval = s[i];
+            if (!cval.equals("null")) {
+                int h = Integer.parseInt(cval);
+                curr.left = new Node(h);
+                q.add(curr.left);
+            }
+            i++;
+            if (i >= s.length)
+                break;
+            cval = s[i];
+            if (!cval.equals("null")) {
+                int h = Integer.parseInt(cval);
+                curr.right = new Node(h);
+                q.add(curr.right);
+            }
+            i++;
+        }
+        return root;
+    }
+
+    static void preOrderTraversal(Node root, long hd, long vd, TreeMap<Long, Vector<Integer>> m) {
+        if (root == null)
+            return;
+        long val = hd << 30 | vd;
+        if (m.get(val) != null)
+            m.get(val).add(root.data);
+        else {
+            Vector<Integer> v = new Vector<Integer>();
+            v.add(root.data);
+            m.put(val, v);
+        }
+        preOrderTraversal(root.left, hd - 1, vd + 1, m);
+        preOrderTraversal(root.right, hd + 1, vd + 1, m);
+    }
+
+    void verticalOrder(Node root) {
+        TreeMap<Long, Vector<Integer>> mp = new TreeMap<>();
+        preOrderTraversal(root, 0, 1, mp);
+        int prekey = Integer.MAX_VALUE;
+        for (Entry<Long, Vector<Integer>> entry : mp.entrySet()) {
+            if ((entry.getKey() >> 30) != prekey && prekey != Integer.MAX_VALUE)
+                System.out.println();
+            prekey = (int) (entry.getKey() >> 30);
+            for (int x : entry.getValue())
+                System.out.print(x + " ");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Main ob = new Main();
+        String s[] = sc.nextLine().split(" ");
+        root = build(s);
+        ob.verticalOrder(root);
+    }
+}
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+4. Boundary traversal
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import java.util.*;
+
+class Node {
+    int data;
+    Node left, right;
+
+    public Node(int data) {
+        this.data = data;
+        left = right = null;
+    }
+}
+
+class Main {
+    static Node root;
+    private List<Integer> path1 = new ArrayList<>();
+    private List<Integer> path2 = new ArrayList<>();
+
+    static Node build(String s[]) {
+        if (s[0].equals("N") || s.length == 0)
+            return null;
+        Node root = new Node(Integer.parseInt(s[0]));
+        Queue<Node> q = new LinkedList<Node>();
+        q.add(root);
+
+        int i = 1;
+        while (!q.isEmpty() && i < s.length) {
+            Node curr = q.poll();
+            String cval = s[i];
+            if (!cval.equals("N")) {
+                int h = Integer.parseInt(cval);
+                curr.left = new Node(h);
+                q.add(curr.left);
+            }
+            i++;
+            if (i >= s.length)
+                break;
+            cval = s[i];
+            if (!cval.equals("N")) {
+                int h = Integer.parseInt(cval);
+                curr.right = new Node(h);
+                q.add(curr.right);
+            }
+            i++;
+        }
+        return root;
+    }
+
+    // print the leaves
+    void printLeaves(Node node) {
+        if (node == null)
+            return;
+        printLeaves(node.left);
+        if (node.left == null && node.right == null)
+            System.out.print(node.data + " ");
+        printLeaves(node.right);
+    }
+
+    // left boundary
+    void printBoundaryLeft(Node node) {
+        if (node == null)
+            return;
+        if (node.left != null) {
+            System.out.print(node.data + " ");
+            printBoundaryLeft(node.left);
+        } else if (node.right != null) {
+            System.out.print(node.data + " ");
+            printBoundaryLeft(node.right);
+        }
+    }
+
+    // right boundary
+    void printBoundaryRight(Node node) {
+        if (node == null)
+            return;
+        if (node.right != null) {
+            printBoundaryRight(node.right);
+            System.out.print(node.data + " ");
+        } else if (node.left != null) {
+            printBoundaryRight(node.left);
+            System.out.print(node.data + " ");
+        }
+    }
+
+    void printBoundary(Node node) {
+        if (node == null)
+            return;
+        System.out.print(node.data + " ");
+        printBoundaryLeft(node.left);
+        printLeaves(node.left);
+        printLeaves(node.right);
+        printBoundaryRight(node.right);
+    }
+
+    // main method
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Main ob = new Main();
+        String s[] = sc.nextLine().split(" ");
+        root = build(s);
+        ob.printBoundary(root);
+    }
+}
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+5. BFS, DFS
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+BFS
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+// Class to represent a graph using adjacency list
+class Graph {
+    int vertices;
+    LinkedList<Integer>[] adjList;
+
+    @SuppressWarnings("unchecked")
+    Graph(int vertices) {
+        this.vertices = vertices;
+        adjList = new LinkedList[vertices];
+        for (int i = 0; i < vertices; ++i)
+            adjList[i] = new LinkedList<>();
+    }
+
+    // Function to add an edge to the graph
+    void addEdge(int u, int v) {
+        adjList[u].add(v);
+    }
+
+    // Function to perform Breadth First Search on a graph
+    void bfs(int startNode) {
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[vertices];
+
+        visited[startNode] = true;
+        queue.add(startNode);
+
+        while (!queue.isEmpty()) {
+            int currentNode = queue.poll();
+            System.out.print(currentNode + " ");
+
+            for (int neighbor : adjList[currentNode]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.add(neighbor);
+                }
+            }
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Read number of vertices and edges
+        int vertices = scanner.nextInt();
+        int edges = scanner.nextInt();
+
+        Graph graph = new Graph(vertices);
+
+        // Read and add edges to the graph
+        for (int i = 0; i < edges; i++) {
+            int source = scanner.nextInt();
+            int destination = scanner.nextInt();
+            graph.addEdge(source, destination);
+        }
+
+        // Read the starting vertex for BFS
+        int startNode = scanner.nextInt();
+        graph.bfs(startNode);
+    }
+}
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+6... 
+dials algo
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import java.util.*;
+class Graph {
+    private int V;
+    private List < List < Node >> adj;
+
+    public Graph(int V) {
+        this.V = V;
+        adj = new ArrayList < > (V);
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList < > ());
+        }
+    }
+    public void addEdge(int source, int destination, int weight) {
+        Node node = new Node(destination, weight);
+        adj.get(source).add(node);
+    }
+    public void dijkstra(int startVertex) {
+        int[] distance = new int[V];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+
+        distance[startVertex] = 0;
+
+        PriorityQueue < Node > pq = new PriorityQueue < > (V, Comparator.comparingInt(node -> node.weight));
+        pq.add(new Node(startVertex, 0));
+        while (!pq.isEmpty()) {
+            int currentVertex = pq.poll().vertex;
+            for (Node neighbor: adj.get(currentVertex)) {
+                int newDist = distance[currentVertex] + neighbor.weight;
+                if (newDist < distance[neighbor.vertex]) {
+                    distance[neighbor.vertex] = newDist;
+                    pq.add(new Node(neighbor.vertex, newDist));
+                }
+            }
+        }
+        // Print the distances
+        System.out.println("Vertex\tDistance from Source");
+        for (int i = 0; i < V; i++) {
+            System.out.println(i + "\t" + distance[i]);
+        }
+    }
+    static class Node {
+        int vertex;
+        int weight;
+        public Node(int vertex, int weight) {
+            this.vertex = vertex;
+            this.weight = weight;
+        }
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        // int V = 5; // Number of vertices
+        // int source = 0; // Source vertex
+        // Graph graph = new Graph(V);
+        // graph.addEdge(0, 1, 2);
+        // graph.addEdge(0, 3, 1);
+        // graph.addEdge(1, 2, 3);
+        // graph.addEdge(1, 3, 2);
+        // graph.addEdge(3, 4, 4);
+        // graph.addEdge(4, 2, 1);
+        
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of vertices: ");
+        int V = scanner.nextInt();
+        System.out.print("Enter the number of edges: ");
+        int E = scanner.nextInt();
+
+        Graph graph = new Graph(V);
+
+        System.out.println("Enter edges in format 'source destination weight':");
+        for (int i = 0; i < E; i++) {
+            int source = scanner.nextInt();
+            int destination = scanner.nextInt();
+            int weight = scanner.nextInt();
+            graph.addEdge(source, destination, weight);
+        }
+
+        System.out.print("Enter the source vertex: ");
+        int source = scanner.nextInt();
+
+        graph.dijkstra(source);
+    }
+}
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+7. bell man ford
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import java.util.Scanner;
+
+public class Main {
+    class Edge {
+        int src, dest, weight;
+        Edge() {
+            src = dest = weight = 0;
+        }
+    }
+
+    int V, E;
+    Edge[] edge; // Use array declaration style that's more common in Java.
+
+    Main(int v, int e) {
+        V = v;
+        E = e;
+        edge = new Edge[e];
+        for (int i = 0; i < e; ++i) {
+            edge[i] = new Edge();
+        }
+    }
+
+    void BellmanFord(Main graph, int src) {
+        int V = graph.V, E = graph.E;
+        int[] dist = new int[V]; // Use array declaration style that's more common in Java.
+
+        // Initialize distances to MAX_VALUE.
+        for (int i = 0; i < V; ++i)
+            dist[i] = Integer.MAX_VALUE;
+        dist[src] = 0;
+
+        // Relax all edges |V| - 1 times.
+        for (int i = 1; i < V; ++i) {
+            for (int j = 0; j < E; ++j) {
+                int u = graph.edge[j].src;
+                int v = graph.edge[j].dest;
+                int weight = graph.edge[j].weight;
+                if (dist[u] != Integer.MAX_VALUE && dist[u] + weight < dist[v])
+                    dist[v] = dist[u] + weight;
+            }
+        }
+
+        // Check for negative-weight cycles.
+        for (int j = 0; j < E; ++j) {
+            int u = graph.edge[j].src;
+            int v = graph.edge[j].dest;
+            int weight = graph.edge[j].weight;
+            if (dist[u] != Integer.MAX_VALUE && dist[u] + weight < dist[v]) {
+                System.out.println("Graph contains a negative-weight cycle");
+                return;
+            }
+        }
+
+        // Print distances.
+        for (int i = 0; i < V; ++i)
+            if (dist[i] != Integer.MAX_VALUE)
+                System.out.print(dist[i] + " ");
+            else
+                System.out.print(-1 + " ");
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int V = sc.nextInt();
+        int E = sc.nextInt();
+        Main graph = new Main(V, E);
+        for (int i = 0; i < E; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            int w = sc.nextInt();
+            graph.edge[i].src = u;
+            graph.edge[i].dest = v;
+            graph.edge[i].weight = w;
+        }
+        graph.BellmanFord(graph, 0); // Starting from vertex 0.
+    }
+}
+
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+8. Heap Sort
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import java.util.Scanner;
+
+public class Main {
+    // Function to perform the heap sort
+    public static void sort(int[] arr) {
+        int N = arr.length;
+
+        // Build heap (rearrange array)
+        for (int i = N / 2 - 1; i >= 0; i--) {
+            heapify(arr, N, i);
+        }
+
+        // One by one extract an element from heap
+        for (int i = N - 1; i > 0; i--) {
+            // Move current root to end
+            int temp = arr[0];
+            arr[0] = arr[i];
+            arr[i] = temp;
+
+            // Call max heapify on the reduced heap
+            heapify(arr, i, 0);
+        }
+    }
+
+    // Function to heapify a subtree rooted with node i which is an index in arr[]
+    static void heapify(int[] arr, int N, int i) {
+        int largest = i; // Initialize largest as root
+        int l = 2 * i + 1; // left = 2*i + 1
+        int r = 2 * i + 2; // right = 2*i + 2
+
+        // If left child is larger than root
+        if (l < N && arr[l] > arr[largest]) {
+            largest = l;
+        }
+
+        // If right child is larger than largest so far
+        if (r < N && arr[r] > arr[largest]) {
+            largest = r;
+        }
+
+        // If largest is not root
+        if (largest != i) {
+            int swap = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = swap;
+
+            // Recursively heapify the affected sub-tree
+            heapify(arr, N, largest);
+        }
+    }
+
+    // Main method to test the code
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter number of elements: ");
+        int n = scanner.nextInt();
+        int[] arr = new int[n];
+        System.out.println("Enter " + n + " elements:");
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        sort(arr);
+        System.out.println("Sorted array is:");
+        for (int i = 0; i < n; i++) {
+            System.out.print(arr[i] + " ");
+        }
+        System.out.println();
+        scanner.close();
+    }
+}
+
+
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+9. binomial heap
+    // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Online Java Compiler
+// Use this editor to write, compile and run your Java code online
+
+import java.util.*;
+class BinomialHeapNode {
+    int key, degree;
+    BinomialHeapNode parent;
+    BinomialHeapNode sibling;
+    BinomialHeapNode child;
+    public BinomialHeapNode(int k){
+        key = k;
+        degree = 0;
+        parent = null;
+        sibling = null;
+        child = null;
+    }
+    public BinomialHeapNode reverse(BinomialHeapNode sibl){
+        BinomialHeapNode ret;
+        if (sibling != null)
+            ret = sibling.reverse(this);
+        else
+            ret = this;
+        sibling = sibl;
+        return ret;
+    }
+public BinomialHeapNode findMinNode(){
+        BinomialHeapNode x = this, y = this;
+        int min = x.key;
+        while (x != null) {
+            if (x.key < min) {
+                y = x;
+                min = x.key;
+            }
+            x = x.sibling;
+        }
+        return y;
+    }
+    public BinomialHeapNode findANodeWithKey(int value){
+        BinomialHeapNode temp = this, node = null;
+        while (temp != null) {
+            if (temp.key == value) {
+                node = temp;
+                break;
+            }
+            if (temp.child == null)
+                temp = temp.sibling;
+                else {
+                node = temp.child.findANodeWithKey(value);
+                if (node == null)
+                    temp = temp.sibling;
+                else
+                    break;
+            }
+        }
+        return node;
+    }
+    public int getSize(){
+        return (1 + ((child == null) ? 0 : child.getSize())+ ((sibling == null) ? 0 : sibling.getSize()));
+    }
+}
+class BinomialHeap {
+    private BinomialHeapNode Nodes;
+    private int size;
+    public BinomialHeap(){
+        Nodes = null;
+        size = 0;
+    }
+
+      public boolean isEmpty() { 
+        return Nodes == null; 
+    }
+    public int getSize() { 
+        return size; 
+    }
+    public void makeEmpty(){
+        Nodes = null;
+        size = 0;
+    }
+    public void insert(int value){
+        if (value > 0) {
+            BinomialHeapNode temp = new BinomialHeapNode(value);
+            if (Nodes == null) {
+                Nodes = temp;
+                size = 1;
+            }
+            else {
+                unionNodes(temp);size++;
+            }
+        }
+    }
+      private void merge(BinomialHeapNode binHeap){
+        BinomialHeapNode temp1 = Nodes, temp2 = binHeap;
+        while ((temp1 != null) && (temp2 != null)) {
+            if (temp1.degree == temp2.degree) {
+                BinomialHeapNode tmp = temp2;
+                temp2 = temp2.sibling;
+                tmp.sibling = temp1.sibling;
+                temp1.sibling = tmp;
+                temp1 = tmp.sibling;
+            }
+            else {
+                if (temp1.degree < temp2.degree) {
+                    if ((temp1.sibling == null) ||                                  (temp1.sibling.degree > temp2.degree)){
+                        BinomialHeapNode tmp = temp2;
+                        temp2 = temp2.sibling;
+                        tmp.sibling = temp1.sibling;
+                        temp1.sibling = tmp;
+                        temp1 = tmp.sibling;
+                    }
+                    
+                        else
+                        temp1 = temp1.sibling;
+                }
+                else {
+                    BinomialHeapNode tmp = temp1;
+                    temp1 = temp2;
+                    temp2 = temp2.sibling;
+                    temp1.sibling = tmp;
+                    if (tmp == Nodes)
+                        Nodes = temp1;
+                }
+            }
+        }
+        if (temp1 == null) {
+            temp1 = Nodes;
+            while (temp1.sibling != null)
+                temp1 = temp1.sibling;
+            temp1.sibling = temp2;
+        }
+    }
+      private void unionNodes(BinomialHeapNode binHeap){
+        merge(binHeap);
+        BinomialHeapNode prevTemp = null, temp = Nodes, nextTemp =                                      Nodes.sibling;
+        while (nextTemp != null) {
+            if ((temp.degree != nextTemp.degree) ||                 ((nextTemp.sibling != null) && (nextTemp.sibling.degree ==  temp.degree))){
+                prevTemp = temp;
+                temp = nextTemp;
+            }
+            else {
+                if (temp.key <= nextTemp.key) {
+                    temp.sibling = nextTemp.sibling;
+                    nextTemp.parent = temp;
+                    nextTemp.sibling = temp.child;
+                    temp.child = nextTemp;
+                    temp.degree++;
+                }
+                else {
+                    if (prevTemp == null)
+                        Nodes = nextTemp;               
+                              else
+                        prevTemp.sibling = nextTemp;
+                    temp.parent = nextTemp;
+                    temp.sibling = nextTemp.child;
+                    nextTemp.child = temp;
+                    nextTemp.degree++;
+                    temp = nextTemp;
+                }
+            }
+            nextTemp = temp.sibling;
+        }
+    }
+    public int findMinimum(){
+        return Nodes.findMinNode().key;
+    }
+    public void delete(int value){
+        if ((Nodes!=null) && (Nodes.findANodeWithKey(value)!=null)){
+            decreaseKeyValue(value, findMinimum() - 1);
+            extractMin();
+        }
+    }
+      public void decreaseKeyValue(int old_value,int new_value){
+        BinomialHeapNode temp = Nodes.findANodeWithKey(old_value);
+        if (temp == null)
+            return;
+        temp.key = new_value;
+        BinomialHeapNode tempParent = temp.parent;
+        while ((tempParent != null) && (temp.key < tempParent.key)) {
+            int z = temp.key;
+            temp.key = tempParent.key;
+            tempParent.key = z;
+            temp = tempParent;
+            tempParent = tempParent.parent;
+        }
+    }
+    public int extractMin(){
+        if (Nodes == null)
+            return -1;
+        BinomialHeapNode temp = Nodes, prevTemp = null;
+        BinomialHeapNode minNode = Nodes.findMinNode();
+                while (temp.key != minNode.key) {
+            prevTemp = temp;
+            temp = temp.sibling;
+        }
+        if (prevTemp == null)
+            Nodes = temp.sibling;
+        else
+            prevTemp.sibling = temp.sibling;
+        temp = temp.child;
+        BinomialHeapNode fakeNode = temp;
+        while (temp != null) {
+            temp.parent = null;
+            temp = temp.sibling;
+        }
+        if ((Nodes == null) && (fakeNode == null))
+            size = 0;
+        else {
+            if ((Nodes == null) && (fakeNode != null)) {
+                Nodes = fakeNode.reverse(null);
+                size = Nodes.getSize();
+            }
+                  else {
+                if ((Nodes != null) && (fakeNode == null))
+                    size = Nodes.getSize();
+                else {
+                    unionNodes(fakeNode.reverse(null));
+                    size = Nodes.getSize();
+                }
+            }
+        }
+        return minNode.key;
+    }
+    public void displayHeap(){
+        System.out.print("\nHeap : ");displayHeap(Nodes);
+        System.out.println("\n");
+    }
+    private void displayHeap(BinomialHeapNode r){
+        if (r != null) {
+            displayHeap(r.child);System.out.print(r.key + " ");
+            displayHeap(r.sibling);
+        }
+    }
+ }
+ public class Main {
+    public static void main(String[] args){
+        BinomialHeap binHeap = new BinomialHeap();
+        Scanner s=new Scanner(System.in);
+        int n=s.nextInt();
+        for(int i=0; i<n; i++)
+            binHeap.insert(s.nextInt());
+        System.out.println("Size:" + binHeap.getSize());
+        binHeap.displayHeap();
+        binHeap.delete(s.nextInt());
+        System.out.println("Size:" + binHeap.getSize());
+        binHeap.displayHeap();
+        System.out.println(binHeap.isEmpty());
+        binHeap.makeEmpty();
+        System.out.println(binHeap.isEmpty());
+    }
+ }
+
+
+
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+10. K-ary heap
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the capacity of the heap: ");
+        final int capacity = scanner.nextInt();
+        int[] arr = new int[capacity];
+
+        System.out.print("Enter the number of elements in the heap: ");
+        int n = scanner.nextInt();
+
+        System.out.println("Enter " + n + " heap elements:");
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        System.out.print("Enter the value of k for k-ary heap: ");
+        int k = scanner.nextInt();
+
+        buildHeap(arr, n, k);
+        System.out.println("Built Heap: ");
+        for (int i = 0; i < n; i++) {
+            System.out.print(arr[i] + " ");
+        }
+        System.out.println();
+
+        System.out.print("Enter the element to insert: ");
+        int element = scanner.nextInt();
+        insert(arr, n, k, element);
+        n++; // Increment n after insertion
+
+        System.out.println("Heap after insertion of " + element + ": ");
+        for (int i = 0; i < n; i++) {
+            System.out.print(arr[i] + " ");
+        }
+        System.out.println();
+
+        int extractedMax = extractMax(arr, n, k);
+        n--; // Decrement n after extracting the max
+
+        System.out.println("Extracted max is " + extractedMax);
+        System.out.println("Heap after extract max: ");
+        for (int i = 0; i < n; i++) {
+            System.out.print(arr[i] + " ");
+        }
+        System.out.println();
+
+        scanner.close();
+    }
+
+    public static void buildHeap(int[] arr, int n, int k) {
+        for (int i = (n - 1) / k; i >= 0; i--) {
+            restoreDown(arr, n, i, k);
+        }
+    }
+
+    public static void insert(int[] arr, int n, int k, int elem) {
+        arr[n] = elem; // Insert element at the end of the heap
+        restoreUp(arr, n, k); // Restore heap property
+    }
+
+    public static int extractMax(int[] arr, int n, int k) {
+        int max = arr[0];
+        arr[0] = arr[n - 1]; // Replace the root with the last element
+        restoreDown(arr, n - 1, 0, k); // Restore heap property
+        return max;
+    }
+ public static void restoreDown(int[] arr, int len, int index, int k){
+        int[] child = new int[k + 1];
+        while (true) {
+            for (int i = 1; i <= k; i++)
+                child[i]=(k*index+i) < len ? (k*index+i) : -1;
+            int maxChild = -1, maxChildIndex = 0;
+            for (int i = 1; i <= k; i++) {
+                if (child[i] != -1 && arr[child[i]] > maxChild) {
+                    maxChildIndex = child[i];
+                    maxChild = arr[child[i]];
+                }
+            }
+            if (maxChild == -1)
+                break;
+            if (arr[index] < arr[maxChildIndex])
+                swap(arr, index, maxChildIndex);
+            index = maxChildIndex;
+        }
+    }
+      public static void restoreUp(int[] arr, int index, int k) {
+        int parent = (index - 1) / k;
+        while (parent >= 0) {
+            if (arr[index] > arr[parent]) {
+                swap(arr, index, parent);
+                index = parent;
+                parent = (index - 1) / k;
+            } else
+                break;
+        }
+    }
+    public static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+}
+
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+11. Winner tree
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import java.util.*;
+
+class Node {
+    int idx;
+    Node left, right;
+}
+
+public class Main {
+    static Node createNode(int idx) {
+        Node t = new Node();
+        t.left = t.right = null;
+        t.idx = idx;
+        return t;
+    }
+
+    static void traverseHeight(Node root, int[] arr, int[] res) {
+        if (root == null) {
+            return;
+        }
+        if (root.left != null && arr[root.idx] == arr[root.left.idx]) {
+            if (root.right != null && arr[root.right.idx] < res[0]) {
+                res[0] = arr[root.right.idx];
+            }
+            traverseHeight(root.left, arr, res);
+        } else if (root.right != null && arr[root.idx] == arr[root.right.idx]) {
+            if (root.left != null && arr[root.left.idx] < res[0]) {
+                res[0] = arr[root.left.idx];
+            }
+            traverseHeight(root.right, arr, res);
+        }
+    }
+
+    static void findSecondMin(int[] arr, int n) {
+        List<Node> li = new LinkedList<>();
+        Node root = null;
+        for (int i = 0; i < n; i += 2) {
+            Node t1 = createNode(i);
+            if (i + 1 < n) {
+                Node t2 = createNode(i + 1);
+                root = (arr[i] < arr[i + 1]) ? createNode(i) : createNode(i + 1);
+                root.left = t1;
+                root.right = t2;
+                li.add(root);
+            } else {
+                li.add(t1);
+            }
+        }
+
+        while (li.size() > 1) {
+            List<Node> newLi = new LinkedList<>();
+            for (int i = 0; i < li.size(); i += 2) {
+                Node f1 = li.get(i);
+                Node f2 = (i + 1 < li.size()) ? li.get(i + 1) : null;
+                root = (f2 == null || arr[f1.idx] < arr[f2.idx]) ? createNode(f1.idx) : createNode(f2.idx);
+                root.left = f1;
+                root.right = f2;
+                newLi.add(root);
+            }
+            li = newLi;
+        }
+
+        int[] res = {Integer.MAX_VALUE};
+        traverseHeight(li.get(0), arr, res);
+        System.out.println("Minimum: " + arr[li.get(0).idx] + ", Second minimum: " + res[0]);
+    }
+
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        int n = s.nextInt();
+        int arr[] = new int[n];
+        for (int i = 0; i < n; i++)
+            arr[i] = s.nextInt();
+        findSecondMin(arr, n);
+    }
+}
+
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+12.  Topological Sort
+  // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Main {
+    static void topologicalSortUtil(int v, List<List<Integer>> adj, boolean[] visited, Stack<Integer> stack) {
+        visited[v] = true;
+        for (int i : adj.get(v)) {
+            if (!visited[i])
+                topologicalSortUtil(i, adj, visited, stack);
+        }
+        // Push the current vertex to the stack which stores the result
+        stack.push(v);
+    }
+
+    static void topologicalSort(List<List<Integer>> adj, int V) {
+        Stack<Integer> stack = new Stack<>();
+        boolean[] visited = new boolean[V];
+        for (int i = 0; i < V; i++) {
+            if (!visited[i])
+                topologicalSortUtil(i, adj, visited, stack);
+        }
+        while (!stack.empty()) {
+            System.out.print(stack.pop() + " ");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int V = sc.nextInt();
+        int E = sc.nextInt();
+        
+        List<List<Integer>> adj = new ArrayList<>(V);
+        for (int i = 0; i < V; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int i = 0; i < E; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            adj.get(u).add(v);
+        }
+
+        topologicalSort(adj, V);
+    }
+}
+************************************************Palindrome****************************
+class Main {
+    public static String findLongestPalindrome(String X, String Y, int m, int n, int[][] lookup) {
+        if (m == 0 || n == 0) {
+            return "";
+        }
+        if (X.charAt(m - 1) == Y.charAt(n - 1)) {
+            return findLongestPalindrome(X, Y, m - 1, n - 1, lookup) + X.charAt(m - 1);
+        }
+        if (lookup[m - 1][n] > lookup[m][n - 1]) {
+            return findLongestPalindrome(X, Y, m - 1, n, lookup);
+        }
+        return findLongestPalindrome(X, Y, m, n - 1, lookup);
+    }
+    
+  public static int LCSLength(String X, String Y, int n, int[][] lookup) {
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+if (X.charAt(i - 1) == Y.charAt(j - 1)) {
+                    lookup[i][j] = lookup[i - 1][j - 1] + 1;
+                } else {
+                    lookup[i][j] = Integer.max(lookup[i - 1][j], lookup[i][j - 1]);
+                }
+            }
+        }
+        return lookup[n][n];
+    }
+    public static void main(String[] args) {
+        String X = "ABBDCACB";
+        String Y = new StringBuilder(X).reverse().toString();
+        int[][] lookup = new int[X.length() + 1][X.length() + 1];
+        System.out.println(LCSLength(X, Y, X.length(), lookup));
+        System.out.println(findLongestPalindrome(X, Y, X.length(), X.length(), lookup));
+    }
+}
+
+************************FIB********************************
+public class fibb {
+    static int recc(int n){
+        if(n==0){
+            return 0;
+        }
+        if(n==1){
+            return 1;
+        }
+        if(n==2){
+            return 1;
+        }
+        return recc(n-1) + recc(n-2);
+
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(recc(14));
+    }
+}
+
+**********************************LIS*************************
+public class lis {
+    
+    public static void main(String[] args) {
+        
+    
+    int arr[]= { 10, 22, 9, 33, 21, 50, 41, 60 };
+
+    int n = arr.length;
+    
+    int[] t = new int[n];
+
+    for(int i = 0;i<n;i++){
+        t[i]=1;
+    }
+    int max = 0;
+    for(int i = 1;i<n;i++){
+        for(int j = 0;j<n;j++){
+            if(arr[i]>arr[j]&&t[i]<t[j]+1){
+                t[i]=t[i]+1;
+                if(max<t[i]){
+                    max = t[i];
+                }
+            }
+        }
+    }
+
+    System.out.println(max);
+}
+}
+
+***********************LBS********************************
+
+
+public class lbs {
+
+    public static int calculateLBS(int[] nums) {
+      int n = nums.length;
+  
+      if (n == 0) {
+        return 0;
+      }
+  
+      int[] I = new int[n];
+      int[] D = new int[n];
+  
+      I[0] = 1;
+      for (int i = 1; i < n; i++) {
+        for (int j = 0; j < i; j++) {
+          if (nums[j] < nums[i] && I[j] > I[i]) {
+            I[i] = I[j];
+          }
+        }
+        I[i]++;
+      }
+  
+      D[n - 1] = 1;
+      for (int i = n - 2; i >= 0; i--) {
+        for (int j = n - 1; j > i; j--) {
+            if (nums[j] < nums[i] && D[j] > D[i]) {
+              D[i] = D[j];
+            }
+          }
+          D[i]++;
+        }
+    
+        int lbs = 1;
+        for (int i = 0; i < n; i++) {
+          lbs = Integer.max(lbs, I[i] + D[i] - 1);
+        }
+        return lbs;
+      }
+      public static void main(String[] args) {
+        int[] nums = { 4, 2, 5, 9, 7, 6, 10, 3, 1 };
+        System.out.print(calculateLBS(nums));
+      }
+    }
+
+           
+           **********************************Substem ******************************
+
+import java.util.Scanner;
+public class subsetsum {
+	static boolean isSubsetSum(int set[], int n, int sum){
+		if (sum == 0)
+			return true;
+		if (n == 0)
+			return false;
+		if (set[n - 1] > sum)
+			return isSubsetSum(set, n - 1, sum);
+		return isSubsetSum(set, n - 1, sum) || isSubsetSum(set, n - 1, sum - set[n - 1]);
+	}
+	public static void main(String args[]){
+		Scanner sc = new Scanner(System.in);
+		int n =sc.nextInt();
+		int sum = sc.nextInt();
+		int set[]= new int[n]; 
+		for(int i=0;i<n;i++)
+			set[i]=sc.nextInt();
+            if (isSubsetSum(set, n, sum) == true)
+			System.out.println("yes");
+		else
+			System.out.println("no");
+	}
+}
+
+*****************************LCS***********************************
+import java.util.*;
+public class lcs {
+    static int recc(String x,String y,int m, int n){
+        if(m==0||n==0){
+            return 0;
+        }
+        if(x.charAt(m-1)==y.charAt(n-1)){
+            System.out.print(x.charAt(m-1));
+            return 1 + recc(x,y,m-1,n-1);
+        }
+        else {
+            return Math.max(recc(x,y,m,n-1),recc(x, y, m-1, n));
+        }
+    }
+
+    public static void main(String[] args) {
+        String s1 = "aggtab";
+        String s2 = "gxtxaxb";
+        int m = s1.length();
+        int n = s2.length();
+        System.out.println(recc(s1,s2,m,n));
+    }
+}
+
+  
